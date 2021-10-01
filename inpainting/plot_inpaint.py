@@ -28,7 +28,7 @@ inpainting algorithm based on 'biharmonic equation'-assumption [2]_ [3]_ [4]_.
 
 import numpy as np
 import matplotlib.pyplot as plt
-import  cv2
+import cv2
 
 from skimage import data
 from skimage.morphology import disk, binary_dilation
