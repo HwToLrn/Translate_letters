@@ -10,6 +10,7 @@ from PIL import Image, ImageFont, ImageDraw
 import torch
 from sklearn.cluster import KMeans
 import textwrap
+import time
 
 # print(torch.cuda.is_available())
 
@@ -30,11 +31,12 @@ if img is None:
 
 
 # 이미지 출력함수
-# def display(img):
-#     # img_rgb = cv2.cvtColor(img,cv2.COLOR_GRAY2RGB)
-#     plt.figure(figsize=(15, 15))
-#     plt.imshow(img)
-#     plt.show()
+def display(img):
+    # img_rgb = cv2.cvtColor(img,cv2.COLOR_GRAY2RGB)
+    # plt.figure(figsize=(15, 15))
+    # plt.imshow(img)
+    # plt.show()
+    img_rgb = 0
 
 
 def cleanup_text(text):
@@ -317,11 +319,7 @@ def rewrite(img, tranlated_texts, bbox_list, color_list):
     # 차이 작은 값은 median값으로 변경 큰것은 그대로.
     bbox_hi[hi_lt_idx] = bbox_hi_median
 
-    print('bbox_list', len(bbox_list))
-    print('color_list', len(color_list))
     for idx, (bbox, color) in enumerate(zip(bbox_list, color_list)):
-        print('idx ', idx)
-        print(f'tranlated_texts[{idx}]', tranlated_texts[idx])
         text = tranlated_texts[idx]
         title_font = ImageFont.truetype("ttf/NotoSansKR-Bold.otf", np.maximum(2, int(bbox_hi[idx]) - 5))  # -가 될경우 최소 2로 설정.
         image_editable.text((bbox[0][0], bbox[0][1]), text, color, anchor=None, font=title_font)
@@ -422,7 +420,7 @@ def change_bg_color(img):
 
 
 def record():
-    video_file = '../movies_sample/3s.avi'  # OCR 적용할 입력 영상 경로 설정
+    video_file = '../movies_sample/3s - 복사본.mp4'  # OCR 적용할 입력 영상 경로 설정
     output_filename = '../movies_sample/3s_output.avi'  # 결과물 파일 이름 설정
 
     capture = cv2.VideoCapture(video_file)
@@ -440,10 +438,7 @@ def record():
     while True:
         ret, frame = capture.read()
 
-        if not ret:
-            print('End the video')
-            break
-        else:
+        if ret:
             # OCR 적용하는 코드 넣으면 되는 부분
             bbox_list, text_list = easy_ocr_result(img=frame)
             bbox_list, text_list = array_box(bbox_list, text_list)
@@ -467,7 +462,7 @@ def record():
             cv2.imshow(winname='MyWindow', mat=frame)
             out.write(image=frame)
 
-        if cv2.waitKey(10) & 0xFF == 27:
+        if cv2.waitKey(1) & 0xFF == 27:
             print('you pressed "ESC"')
             break
 
